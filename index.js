@@ -1,7 +1,11 @@
 import express from "express";
 import mongoose from "mongoose";
+import dotenv from "dotenv";
 import Product from "./models/product.model.js";
 import productRoutes from "./routes/product.route.js";
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
 
@@ -18,15 +22,14 @@ app.get("/", (req, res) => {
 
 
 mongoose
-  .connect(
-    "mongodb+srv://admin:RX4KYdCaN4o54jjm@backenddb.papqtvv.mongodb.net/?retryWrites=true&w=majority&appName=BackendDB"
-  )
+  .connect(process.env.MONGODB_URI)
   .then(() => {
     console.log("Connected to MongoDB");
-    app.listen(3000, () => {
-      console.log("Server is running on port 3000");
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   })
-  .catch(() => {
-    console.log("Connection failed");
+  .catch((error) => {
+    console.log("Connection failed:", error.message);
   });
